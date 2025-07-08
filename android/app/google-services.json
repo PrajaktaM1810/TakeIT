@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "730940720693",
+    "firebase_url": "https://takeit-3ba97-default-rtdb.firebaseio.com",
+    "project_id": "takeit-3ba97",
+    "storage_bucket": "takeit-3ba97.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:730940720693:android:bd3608f0aa5669a8f5537c",
+        "android_client_info": {
+          "package_name": "com.takeit.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "730940720693-re6t6bt2hli11ga8v7ut26nhuebndtfv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQIj4Q7ACnG_sLocq8VwCHt85PjhjS76M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "730940720693-re6t6bt2hli11ga8v7ut26nhuebndtfv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "730940720693-cc5582fq1cn27plljtmhh201o0jl0vdm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.takeit.user"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
