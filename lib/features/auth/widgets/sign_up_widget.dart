@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sixam_mart/common/models/response_model.dart';
 import 'package:sixam_mart/common/widgets/custom_button.dart';
 import 'package:sixam_mart/common/widgets/custom_snackbar.dart';
@@ -35,25 +37,72 @@ class SignUpWidget extends StatefulWidget {
 
 class SignUpWidgetState extends State<SignUpWidget> {
   final FocusNode _nameFocus = FocusNode();
+  final FocusNode _dobFocusNode = FocusNode();
+
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _phoneFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _confirmPasswordFocus = FocusNode();
+  final FocusNode _userNameFocus = FocusNode();
   final FocusNode _referCodeFocus = FocusNode();
+  final FocusNode _codeFocus = FocusNode();
+  final TextEditingController _codeController = TextEditingController();
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _referCodeController = TextEditingController();
   String? _countryDialCode;
   GlobalKey<FormState>? _formKeySignUp;
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _whatsapp_noController = TextEditingController();
+  final TextEditingController _whatsapp_no1Controller = TextEditingController();
+  final TextEditingController _phone1Controller = TextEditingController();
+  final TextEditingController _landmarkController = TextEditingController();
+  final TextEditingController _areaController = TextEditingController();
+  final TextEditingController _talukaController = TextEditingController();
+  final TextEditingController _districtController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _pincodeController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _opens_atController = TextEditingController();
+  final TextEditingController _closes_atController = TextEditingController();
+  final TextEditingController _longitudeController = TextEditingController();
+  final TextEditingController _latitudeController = TextEditingController();
+  final TextEditingController _routeController = TextEditingController();
+  final TextEditingController _subrouteController = TextEditingController();
+  final TextEditingController _zone_idController = TextEditingController();
+  final TextEditingController _gst_noController = TextEditingController();
+  final TextEditingController _panCardNoController = TextEditingController();
+
+//   // Image files
+  File? _profileImageFile;
+  File? _panImageFile;
+  File? _shopImageFile;
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(
+      ImageSource source, Function(File) onImagePicked) async {
+    final pickedFile = await _picker.pickImage(source: source);
+    if (pickedFile != null) {
+      onImagePicked(File(pickedFile.path));
+      setState(() {});
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _formKeySignUp = GlobalKey<FormState>();
-    _countryDialCode = CountryCode.fromCountryCode(Get.find<SplashController>().configModel!.country!).dialCode;
+    _countryDialCode = CountryCode.fromCountryCode(
+            Get.find<SplashController>().configModel!.country!)
+        .dialCode;
   }
 
   @override
@@ -63,241 +112,610 @@ class SignUpWidgetState extends State<SignUpWidget> {
       key: _formKeySignUp,
       child: Container(
         width: context.width > 700 ? 700 : context.width,
-        decoration: context.width > 700 ? BoxDecoration(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-        ) : null,
-        padding: EdgeInsets.symmetric(horizontal: isDesktop ? Dimensions.paddingSizeDefault : 0),
+        decoration: context.width > 700
+            ? BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+              )
+            : null,
+        padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? Dimensions.paddingSizeDefault : 0),
         child: GetBuilder<AuthController>(builder: (authController) {
           return Column(mainAxisSize: MainAxisSize.min, children: [
-
-            isDesktop ? Align(
-              alignment: Alignment.topRight,
-              child: IconButton(onPressed: ()=> Get.back(), icon: const Icon(Icons.clear)),
-            ) : const SizedBox(),
-
+            isDesktop
+                ? Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        onPressed: () => Get.back(),
+                        icon: const Icon(Icons.clear)),
+                  )
+                : const SizedBox(),
             Padding(
-              padding: EdgeInsets.all(isDesktop ? Dimensions.paddingSizeExtraLarge : 0),
-              child: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: [
-
-                isDesktop ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeLarge),
-                  child: Image.asset(Images.logo, width: 125),
-                ) : const SizedBox(),
-
-                isDesktop ? Align(
-                  alignment: Alignment.topLeft,
-                  child: Text('sign_up'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeExtraLarge)),
-                ) : const SizedBox(),
-
-                SizedBox(height: isDesktop ? Dimensions.paddingSizeExtraLarge : Dimensions.paddingSizeSmall),
-
-                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Expanded(
-                    child: CustomTextField(
-                      titleText: 'ex_jhon'.tr,
-                      labelText: 'user_name'.tr,
+              padding: EdgeInsets.all(
+                  isDesktop ? Dimensions.paddingSizeExtraLarge : 0),
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    isDesktop
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: Dimensions.paddingSizeLarge),
+                            child: Image.asset(Images.logo, width: 125),
+                          )
+                        : const SizedBox(),
+                    isDesktop
+                        ? Align(
+                            alignment: Alignment.topLeft,
+                            child: Text('sign_up'.tr,
+                                style: robotoBold.copyWith(
+                                    fontSize: Dimensions.fontSizeExtraLarge)),
+                          )
+                        : const SizedBox(),
+                    SizedBox(
+                        height: isDesktop
+                            ? Dimensions.paddingSizeExtraLarge
+                            : Dimensions.paddingSizeSmall),
+                    Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: CustomTextField(
+                              titleText: 'ex_jhon'.tr,
+                              labelText: 'name'.tr,
+                              showLabelText: true,
+                              required: true,
+                              controller: _nameController,
+                              focusNode: _nameFocus,
+                              nextFocus:
+                                  isDesktop ? _referCodeFocus : _phoneFocus,
+                              inputType: TextInputType.name,
+                              capitalization: TextCapitalization.words,
+                              prefixIcon: CupertinoIcons.person_alt_circle_fill,
+                              validator: (value) =>
+                                  ValidateCheck.validateEmptyText(
+                                      value, "please_enter_your_name".tr),
+                            ),
+                          ),
+                          SizedBox(
+                              width: Get.find<SplashController>()
+                                              .configModel!
+                                              .refEarningStatus ==
+                                          1 &&
+                                      isDesktop
+                                  ? Dimensions.paddingSizeSmall
+                                  : 0),
+                          (Get.find<SplashController>()
+                                          .configModel!
+                                          .refEarningStatus ==
+                                      1 &&
+                                  isDesktop)
+                              ? Expanded(
+                                  child: CustomTextField(
+                                    titleText: 'refer_code'.tr,
+                                    labelText: 'refer_code'.tr,
+                                    showLabelText: true,
+                                    controller: _referCodeController,
+                                    focusNode: _referCodeFocus,
+                                    nextFocus:
+                                        isDesktop ? _emailFocus : _phoneFocus,
+                                    inputType: TextInputType.text,
+                                    capitalization: TextCapitalization.words,
+                                    prefixImage: Images.referCode,
+                                    divider: false,
+                                    prefixSize: 14,
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ]),
+                    SizedBox(
+                        height: isDesktop
+                            ? Dimensions.paddingSizeExtraLarge
+                            : Dimensions.paddingSizeLarge),
+                    Row(children: [
+                      isDesktop
+                          ? Expanded(
+                              child: CustomTextField(
+                                titleText: 'enter_email'.tr,
+                                labelText: 'email'.tr,
+                                showLabelText: true,
+                                required: true,
+                                controller: _emailController,
+                                focusNode: _emailFocus,
+                                nextFocus:
+                                    isDesktop ? _phoneFocus : _passwordFocus,
+                                inputType: TextInputType.emailAddress,
+                                prefixIcon: CupertinoIcons.mail_solid,
+                                validator: (value) =>
+                                    ValidateCheck.validateEmail(value),
+                              ),
+                            )
+                          : const SizedBox(),
+                      SizedBox(
+                          width: isDesktop ? Dimensions.paddingSizeSmall : 0),
+                      Expanded(
+                        child: CustomTextField(
+                          titleText: 'xxx-xxx-xxxxx'.tr,
+                          labelText: 'phone'.tr,
+                          showLabelText: true,
+                          required: true,
+                          controller: _phoneController,
+                          focusNode: _phoneFocus,
+                          nextFocus: isDesktop ? _passwordFocus : _emailFocus,
+                          inputType: TextInputType.phone,
+                          isPhone: true,
+                          onCountryChanged: (CountryCode countryCode) {
+                            _countryDialCode = countryCode.dialCode;
+                          },
+                          countryDialCode: _countryDialCode != null
+                              ? CountryCode.fromCountryCode(
+                                      Get.find<SplashController>()
+                                          .configModel!
+                                          .country!)
+                                  .code
+                              : Get.find<LocalizationController>()
+                                  .locale
+                                  .countryCode,
+                          validator: (value) => ValidateCheck.validateEmptyText(
+                              value, "please_enter_phone_number".tr),
+                        ),
+                      ),
+                    ]),
+                    SizedBox(
+                        height: isDesktop
+                            ? Dimensions.paddingSizeExtraLarge
+                            : Dimensions.paddingSizeLarge),
+                    !isDesktop
+                        ? CustomTextField(
+                            labelText: 'email'.tr,
+                            titleText: 'enter_email'.tr,
+                            showLabelText: true,
+                            required: true,
+                            controller: _emailController,
+                            focusNode: _emailFocus,
+                            nextFocus: _passwordFocus,
+                            inputType: TextInputType.emailAddress,
+                            prefixIcon: CupertinoIcons.mail_solid,
+                            validator: (value) =>
+                                ValidateCheck.validateEmail(value),
+                            divider: false,
+                          )
+                        : const SizedBox(),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'joney'.tr,
+                      labelText: 'User Name'.tr,
                       showLabelText: true,
                       required: true,
-                      controller: _nameController,
-                      focusNode: _nameFocus,
-                      nextFocus: isDesktop ? _referCodeFocus : _phoneFocus,
+                      controller: _userNameController,
+                      focusNode: _userNameFocus,
                       inputType: TextInputType.name,
                       capitalization: TextCapitalization.words,
                       prefixIcon: CupertinoIcons.person_alt_circle_fill,
-                      validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_your_name".tr),
+                      validator: (value) => ValidateCheck.validateEmptyText(
+                          value, "please_enter_your_name".tr),
                     ),
-                  ),
-                  SizedBox(width: Get.find<SplashController>().configModel!.refEarningStatus == 1 && isDesktop ? Dimensions.paddingSizeSmall : 0),
-
-                  (Get.find<SplashController>().configModel!.refEarningStatus == 1 && isDesktop) ? Expanded(
-                    child: CustomTextField(
-                      titleText: 'refer_code'.tr,
-                      labelText: 'refer_code'.tr,
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Code'.tr,
+                      labelText: 'Enter Code'.tr,
                       showLabelText: true,
-                      controller: _referCodeController,
-                      focusNode: _referCodeFocus,
-                      nextFocus: isDesktop ? _emailFocus : _phoneFocus,
-                      inputType: TextInputType.text,
+                      required: true,
+                      controller: _codeController,
+                      focusNode: _codeFocus,
+                      inputType: TextInputType.name,
                       capitalization: TextCapitalization.words,
-                      prefixImage : Images.referCode,
-                      divider: false,
-                      prefixSize: 14,
+                      //prefixIcon: CupertinoIcons.person_alt_circle_fill,
+                      // validator: (value) => ValidateCheck.validateEmptyText(
+                      //     value, "please_enter_your_name".tr),
                     ),
-                  ) : const SizedBox(),
-                ]),
-                SizedBox(height: isDesktop ? Dimensions.paddingSizeExtraLarge : Dimensions.paddingSizeLarge),
-
-                Row(children: [
-                  isDesktop ? Expanded(
-                    child: CustomTextField(
-                      titleText: 'enter_email'.tr,
-                      labelText: 'email'.tr,
-                      showLabelText: true,
-                      required: true,
-                      controller: _emailController,
-                      focusNode: _emailFocus,
-                      nextFocus: isDesktop ? _phoneFocus : _passwordFocus,
-                      inputType: TextInputType.emailAddress,
-                      prefixIcon: CupertinoIcons.mail_solid,
-                      validator: (value) => ValidateCheck.validateEmail(value),
-                    ),
-                  ) : const SizedBox(),
-                  SizedBox(width: isDesktop ? Dimensions.paddingSizeSmall : 0),
-
-                  Expanded(
-                    child: CustomTextField(
-                      titleText: 'xxx-xxx-xxxxx'.tr,
-                      labelText: 'phone'.tr,
-                      showLabelText: true,
-                      required: true,
-                      controller: _phoneController,
-                      focusNode: _phoneFocus,
-                      nextFocus: isDesktop ? _passwordFocus : _emailFocus,
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'WhatsApp Number',
+                      labelText: 'WhatsApp Number',
+                      controller: _whatsapp_noController,
                       inputType: TextInputType.phone,
-                      isPhone: true,
-                      onCountryChanged: (CountryCode countryCode) {
-                        _countryDialCode = countryCode.dialCode;
-                      },
-                      countryDialCode: _countryDialCode != null ? CountryCode.fromCountryCode(Get.find<SplashController>().configModel!.country!).code
-                          : Get.find<LocalizationController>().locale.countryCode,
-                      validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_phone_number".tr),
+                      prefixIcon: Icons.phone_android,
                     ),
-                  ),
-
-                ]),
-                SizedBox(height: isDesktop ? Dimensions.paddingSizeExtraLarge : Dimensions.paddingSizeLarge),
-
-                !isDesktop ? CustomTextField(
-                  labelText: 'email'.tr,
-                  titleText: 'enter_email'.tr,
-                  showLabelText: true,
-                  required: true,
-                  controller: _emailController,
-                  focusNode: _emailFocus,
-                  nextFocus: _passwordFocus,
-                  inputType: TextInputType.emailAddress,
-                  prefixIcon: CupertinoIcons.mail_solid,
-                  validator: (value) => ValidateCheck.validateEmail(value),
-                  divider: false,
-                ) : const SizedBox(),
-                SizedBox(height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
-
-                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Expanded(
-                    child: Column(children: [
-                      CustomTextField(
-                        titleText: '8+characters'.tr,
-                        labelText: 'password'.tr,
-                        showLabelText: true,
-                        required: true,
-                        controller: _passwordController,
-                        focusNode: _passwordFocus,
-                        nextFocus: _confirmPasswordFocus,
-                        inputType: TextInputType.visiblePassword,
-                        prefixIcon: Icons.lock,
-                        isPassword: true,
-                        validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_password".tr),
-                      ),
-                    ]),
-                  ),
-                  SizedBox(width: isDesktop ? Dimensions.paddingSizeSmall : 0),
-
-                  isDesktop ? Expanded(child: CustomTextField(
-                    titleText: '8+characters'.tr,
-                    labelText: 'confirm_password'.tr,
-                    showLabelText: true,
-                    required: true,
-                    controller: _confirmPasswordController,
-                    focusNode: _confirmPasswordFocus,
-                    nextFocus: Get.find<SplashController>().configModel!.refEarningStatus == 1 ? _referCodeFocus : null,
-                    inputAction: Get.find<SplashController>().configModel!.refEarningStatus == 1 ? TextInputAction.next : TextInputAction.done,
-                    inputType: TextInputType.visiblePassword,
-                    prefixIcon: Icons.lock,
-                    isPassword: true,
-                    onSubmit: (text) => (GetPlatform.isWeb) ? _register(authController, _countryDialCode!) : null,
-                    validator: (value) => ValidateCheck.validateConfirmPassword(value, _passwordController.text),
-                  )) : const SizedBox()
-
-                ]),
-                SizedBox(height: isDesktop ? Dimensions.paddingSizeExtraLarge : Dimensions.paddingSizeLarge),
-
-                !isDesktop ? CustomTextField(
-                  titleText: '8+characters'.tr,
-                  labelText: 'confirm_password'.tr,
-                  showLabelText: true,
-                  required: true,
-                  controller: _confirmPasswordController,
-                  focusNode: _confirmPasswordFocus,
-                  nextFocus: Get.find<SplashController>().configModel!.refEarningStatus == 1 ? _referCodeFocus : null,
-                  inputAction: Get.find<SplashController>().configModel!.refEarningStatus == 1 ? TextInputAction.next : TextInputAction.done,
-                  inputType: TextInputType.visiblePassword,
-                  prefixIcon: Icons.lock,
-                  isPassword: true,
-                  onSubmit: (text) => (GetPlatform.isWeb) ? _register(authController, _countryDialCode!) : null,
-                  validator: (value) => ValidateCheck.validateConfirmPassword(value, _passwordController.text),
-                ) : const SizedBox(),
-                SizedBox(height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
-
-
-                (Get.find<SplashController>().configModel!.refEarningStatus == 1 && !isDesktop) ? CustomTextField(
-                  titleText: 'refer_code'.tr,
-                  labelText: 'refer_code'.tr,
-                  showLabelText: true,
-                  controller: _referCodeController,
-                  focusNode: _referCodeFocus,
-                  inputAction: TextInputAction.done,
-                  inputType: TextInputType.text,
-                  capitalization: TextCapitalization.words,
-                  prefixImage : Images.referCode,
-                  divider: false,
-                  prefixSize: 14,
-                ) : const SizedBox(),
-                SizedBox(height: isDesktop ? 0 : Dimensions.paddingSizeLarge),
-
-                const ConditionCheckBoxWidget(forDeliveryMan: true),
-                SizedBox(height: isDesktop ? Dimensions.paddingSizeExtraLarge : Dimensions.paddingSizeDefault),
-
-                CustomButton(
-                  height: isDesktop ? 50 : null,
-                  width:  isDesktop ? 250 : null,
-                  radius: isDesktop ? Dimensions.radiusSmall : Dimensions.radiusDefault,
-                  isBold: !isDesktop,
-                  fontSize: isDesktop ? Dimensions.fontSizeSmall : null,
-                  buttonText: 'sign_up'.tr,
-                  isLoading: authController.isLoading,
-                  onPressed: authController.acceptTerms ? () => _register(authController, _countryDialCode!) : null,
-                ),
-                SizedBox(height: isDesktop ? Dimensions.paddingSizeExtraLarge : Dimensions.paddingSizeDefault),
-
-                Padding(
-                  padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeLarge),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Text('already_have_account'.tr, style: robotoRegular.copyWith(color: Theme.of(context).hintColor)),
-
-                    InkWell(
-                      onTap: authController.isLoading ? null : () {
-                        if(isDesktop){
-                          Get.back();
-                          Get.dialog(const Center(child: AuthDialogWidget(exitFromApp: false, backFromThis: false)));
-
-                        }else{
-                          if(Get.currentRoute == RouteHelper.signUp) {
-                            Get.back();
-                          } else {
-                            Get.toNamed(RouteHelper.getSignInRoute(RouteHelper.signUp));
-                          }
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Alternate WhatsApp Number',
+                      labelText: 'WhatsApp Number 2',
+                      controller: _whatsapp_no1Controller,
+                      inputType: TextInputType.phone,
+                      prefixIcon: Icons.phone,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Alternate Phone',
+                      labelText: 'Phone 2',
+                      controller: _phone1Controller,
+                      inputType: TextInputType.phone,
+                      prefixIcon: Icons.phone,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Landmark',
+                      labelText: 'Landmark',
+                      controller: _landmarkController,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Area',
+                      labelText: 'Area',
+                      controller: _areaController,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Taluka',
+                      labelText: 'Taluka',
+                      controller: _talukaController,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'District',
+                      labelText: 'District',
+                      controller: _districtController,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'City',
+                      labelText: 'City',
+                      controller: _cityController,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'State',
+                      labelText: 'State',
+                      controller: _stateController,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Pincode',
+                      labelText: 'Pincode',
+                      controller: _pincodeController,
+                      inputType: TextInputType.number,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Date of Birth',
+                      hintText: 'Select your DOB',
+                      controller: _dobController,
+                      focusNode: _dobFocusNode,
+                      inputType: TextInputType.none, // disables keyboard
+                      inputAction: TextInputAction.next,
+                      isEnabled: true,
+                      isPassword: false,
+                      showTitle: true,
+                      showLabelText: true,
+                      required: true,
+                      labelText: 'DOB',
+                      onTap: () async {
+                        //FocusScope.of(context).unfocus(); // hide keyboard
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime(2000),
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime.now(),
+                          builder: (context, child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: ColorScheme.light(
+                                  primary: Theme.of(context).primaryColor,
+                                  onPrimary: Colors.white,
+                                  onSurface: Colors.black,
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          },
+                        );
+                        if (pickedDate != null) {
+                          String formattedDate =
+                              '${pickedDate.day}/${pickedDate.month}/${pickedDate.year}';
+                          _dobController.text = formattedDate;
                         }
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-                        child: Text('sign_in'.tr, style: robotoMedium.copyWith(color: Theme.of(context).primaryColor)),
-                      ),
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Opens At',
+                      labelText: 'Opens At',
+                      controller: _opens_atController,
+                      prefixIcon: Icons.access_time,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Closes At',
+                      labelText: 'Closes At',
+                      controller: _closes_atController,
+                      prefixIcon: Icons.access_time_filled,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Address',
+                      labelText: 'Address',
+                      controller: _addressController,
+                      inputType: TextInputType.text,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Latitude',
+                      labelText: 'Latitude',
+                      controller: _latitudeController,
+                      inputType: TextInputType.number,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Longitude',
+                      labelText: 'Longitude',
+                      controller: _longitudeController,
+                      inputType: TextInputType.number,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Route',
+                      labelText: 'Route',
+                      controller: _routeController,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Subroute',
+                      labelText: 'Subroute',
+                      controller: _subrouteController,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'Zone ID',
+                      labelText: 'Zone ID',
+                      controller: _zone_idController,
+                      inputType: TextInputType.number,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'GST Number',
+                      labelText: 'GST No.',
+                      controller: _gst_noController,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
+                      titleText: 'PAN Card Number',
+                      labelText: 'PAN No.',
+                      controller: _panCardNoController,
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    const SizedBox(height: 8),
+                    const Text("Upload Documents",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        _imageTile(
+                            "Profile Image",
+                            _profileImageFile,
+                            () => _pickImage(ImageSource.gallery,
+                                (file) => _profileImageFile = file)),
+                        _imageTile(
+                            "PAN Card",
+                            _panImageFile,
+                            () => _pickImage(ImageSource.gallery,
+                                (file) => _panImageFile = file)),
+                        _imageTile(
+                            "Shop Image",
+                            _shopImageFile,
+                            () => _pickImage(ImageSource.gallery,
+                                (file) => _shopImageFile = file)),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(children: [
+                              CustomTextField(
+                                titleText: '8+characters'.tr,
+                                labelText: 'password'.tr,
+                                showLabelText: true,
+                                required: true,
+                                controller: _passwordController,
+                                focusNode: _passwordFocus,
+                                nextFocus: _confirmPasswordFocus,
+                                inputType: TextInputType.visiblePassword,
+                                prefixIcon: Icons.lock,
+                                isPassword: true,
+                                validator: (value) =>
+                                    ValidateCheck.validateEmptyText(
+                                        value, "please_enter_password".tr),
+                              ),
+                            ]),
+                          ),
+                          SizedBox(
+                              width:
+                                  isDesktop ? Dimensions.paddingSizeSmall : 0),
+                          isDesktop
+                              ? Expanded(
+                                  child: CustomTextField(
+                                  titleText: '8+characters'.tr,
+                                  labelText: 'confirm_password'.tr,
+                                  showLabelText: true,
+                                  required: true,
+                                  controller: _confirmPasswordController,
+                                  focusNode: _confirmPasswordFocus,
+                                  nextFocus: Get.find<SplashController>()
+                                              .configModel!
+                                              .refEarningStatus ==
+                                          1
+                                      ? _referCodeFocus
+                                      : null,
+                                  inputAction: Get.find<SplashController>()
+                                              .configModel!
+                                              .refEarningStatus ==
+                                          1
+                                      ? TextInputAction.next
+                                      : TextInputAction.done,
+                                  inputType: TextInputType.visiblePassword,
+                                  prefixIcon: Icons.lock,
+                                  isPassword: true,
+                                  onSubmit: (text) => (GetPlatform.isWeb)
+                                      ? _register(
+                                          authController, _countryDialCode!)
+                                      : null,
+                                  validator: (value) =>
+                                      ValidateCheck.validateConfirmPassword(
+                                          value, _passwordController.text),
+                                ))
+                              : const SizedBox()
+                        ]),
+                    SizedBox(
+                        height: isDesktop
+                            ? Dimensions.paddingSizeExtraLarge
+                            : Dimensions.paddingSizeLarge),
+                    !isDesktop
+                        ? CustomTextField(
+                            titleText: '8+characters'.tr,
+                            labelText: 'confirm_password'.tr,
+                            showLabelText: true,
+                            required: true,
+                            controller: _confirmPasswordController,
+                            focusNode: _confirmPasswordFocus,
+                            nextFocus: Get.find<SplashController>()
+                                        .configModel!
+                                        .refEarningStatus ==
+                                    1
+                                ? _referCodeFocus
+                                : null,
+                            inputAction: Get.find<SplashController>()
+                                        .configModel!
+                                        .refEarningStatus ==
+                                    1
+                                ? TextInputAction.next
+                                : TextInputAction.done,
+                            inputType: TextInputType.visiblePassword,
+                            prefixIcon: Icons.lock,
+                            isPassword: true,
+                            onSubmit: (text) => (GetPlatform.isWeb)
+                                ? _register(authController, _countryDialCode!)
+                                : null,
+                            validator: (value) =>
+                                ValidateCheck.validateConfirmPassword(
+                                    value, _passwordController.text),
+                          )
+                        : const SizedBox(),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    (Get.find<SplashController>()
+                                    .configModel!
+                                    .refEarningStatus ==
+                                1 &&
+                            !isDesktop)
+                        ? CustomTextField(
+                            titleText: 'refer_code'.tr,
+                            labelText: 'refer_code'.tr,
+                            showLabelText: true,
+                            controller: _referCodeController,
+                            focusNode: _referCodeFocus,
+                            inputAction: TextInputAction.done,
+                            inputType: TextInputType.text,
+                            capitalization: TextCapitalization.words,
+                            prefixImage: Images.referCode,
+                            divider: false,
+                            prefixSize: 14,
+                          )
+                        : const SizedBox(),
+                    SizedBox(
+                        height: isDesktop ? 0 : Dimensions.paddingSizeLarge),
+                    const ConditionCheckBoxWidget(forDeliveryMan: true),
+                    SizedBox(
+                        height: isDesktop
+                            ? Dimensions.paddingSizeExtraLarge
+                            : Dimensions.paddingSizeDefault),
+                    CustomButton(
+                      height: isDesktop ? 50 : null,
+                      width: isDesktop ? 250 : null,
+                      radius: isDesktop
+                          ? Dimensions.radiusSmall
+                          : Dimensions.radiusDefault,
+                      isBold: !isDesktop,
+                      fontSize: isDesktop ? Dimensions.fontSizeSmall : null,
+                      buttonText: 'sign_up'.tr,
+                      isLoading: authController.isLoading,
+                      onPressed: authController.acceptTerms
+                          ? () => _register(authController, _countryDialCode!)
+                          : null,
+                    ),
+                    SizedBox(
+                        height: isDesktop
+                            ? Dimensions.paddingSizeExtraLarge
+                            : Dimensions.paddingSizeDefault),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: Dimensions.paddingSizeLarge),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('already_have_account'.tr,
+                                style: robotoRegular.copyWith(
+                                    color: Theme.of(context).hintColor)),
+                            InkWell(
+                              onTap: authController.isLoading
+                                  ? null
+                                  : () {
+                                      if (isDesktop) {
+                                        Get.back();
+                                        Get.dialog(const Center(
+                                            child: AuthDialogWidget(
+                                                exitFromApp: false,
+                                                backFromThis: false)));
+                                      } else {
+                                        if (Get.currentRoute ==
+                                            RouteHelper.signUp) {
+                                          Get.back();
+                                        } else {
+                                          Get.toNamed(
+                                              RouteHelper.getSignInRoute(
+                                                  RouteHelper.signUp));
+                                        }
+                                      }
+                                    },
+                              child: Padding(
+                                padding: const EdgeInsets.all(
+                                    Dimensions.paddingSizeExtraSmall),
+                                child: Text('sign_in'.tr,
+                                    style: robotoMedium.copyWith(
+                                        color: Theme.of(context).primaryColor)),
+                              ),
+                            ),
+                          ]),
                     ),
                   ]),
-                ),
-
-              ]),
             ),
           ]);
         }),
@@ -306,10 +724,9 @@ class SignUpWidgetState extends State<SignUpWidget> {
   }
 
   void _register(AuthController authController, String countryCode) async {
-
     SignUpBodyModel? signUpModel = await _prepareSignUpBody(countryCode);
 
-    if(signUpModel == null) {
+    if (signUpModel == null) {
       return;
     } else {
       authController.registration(signUpModel).then((status) async {
@@ -324,51 +741,100 @@ class SignUpWidgetState extends State<SignUpWidget> {
     String email = _emailController.text.trim();
 
     if (status.isSuccess) {
-      if(ResponsiveHelper.isDesktop(context)) {
+      if (ResponsiveHelper.isDesktop(context)) {
         Get.find<CartController>().getCartDataOnline();
       }
-      if(status.authResponseModel != null && !status.authResponseModel!.isPhoneVerified!) {
+      if (status.authResponseModel != null &&
+          !status.authResponseModel!.isPhoneVerified!) {
         List<int> encoded = utf8.encode(password);
         String data = base64Encode(encoded);
-        if(Get.find<SplashController>().configModel!.firebaseOtpVerification!) {
-          Get.find<AuthController>().firebaseVerifyPhoneNumber(numberWithCountryCode, status.message, CentralizeLoginType.manual.name, fromSignUp: true);
+        if (Get.find<SplashController>()
+            .configModel!
+            .firebaseOtpVerification!) {
+          Get.find<AuthController>().firebaseVerifyPhoneNumber(
+              numberWithCountryCode,
+              status.message,
+              CentralizeLoginType.manual.name,
+              fromSignUp: true);
         } else {
-          if(ResponsiveHelper.isDesktop(context)) {
+          if (ResponsiveHelper.isDesktop(context)) {
             Get.back();
             Get.dialog(VerificationScreen(
-              number: numberWithCountryCode, email: null, token: status.message, fromSignUp: true,
-              fromForgetPassword: false, loginType: CentralizeLoginType.manual.name, password: password,
+              number: numberWithCountryCode,
+              email: null,
+              token: status.message,
+              fromSignUp: true,
+              fromForgetPassword: false,
+              loginType: CentralizeLoginType.manual.name,
+              password: password,
             ));
           } else {
             Get.toNamed(RouteHelper.getVerificationRoute(
-              numberWithCountryCode, null, status.message, RouteHelper.signUp, data, CentralizeLoginType.manual.name,
+              numberWithCountryCode,
+              null,
+              status.message,
+              RouteHelper.signUp,
+              data,
+              CentralizeLoginType.manual.name,
             ));
           }
         }
-      } else if(status.authResponseModel != null && !status.authResponseModel!.isEmailVerified!) {
+      } else if (status.authResponseModel != null &&
+          !status.authResponseModel!.isEmailVerified!) {
         List<int> encoded = utf8.encode(password);
         String data = base64Encode(encoded);
-        if(ResponsiveHelper.isDesktop(context)) {
+        if (ResponsiveHelper.isDesktop(context)) {
           Get.back();
           Get.dialog(VerificationScreen(
-            number: null, email: email, token: status.message, fromSignUp: true,
-            fromForgetPassword: false, loginType: CentralizeLoginType.manual.name, password: password,
+            number: null,
+            email: email,
+            token: status.message,
+            fromSignUp: true,
+            fromForgetPassword: false,
+            loginType: CentralizeLoginType.manual.name,
+            password: password,
           ));
         } else {
           Get.toNamed(RouteHelper.getVerificationRoute(
-            null, email, status.message, RouteHelper.signUp, data, CentralizeLoginType.manual.name,
+            null,
+            email,
+            status.message,
+            RouteHelper.signUp,
+            data,
+            CentralizeLoginType.manual.name,
           ));
         }
       } else {
         Get.find<ProfileController>().getUserInfo();
-        Get.find<LocationController>().navigateToLocationScreen(RouteHelper.signUp);
-        if(ResponsiveHelper.isDesktop(context)) {
+        Get.find<LocationController>()
+            .navigateToLocationScreen(RouteHelper.signUp);
+        if (ResponsiveHelper.isDesktop(context)) {
           Get.back();
         }
       }
     } else {
       showCustomSnackBar(status.message);
     }
+  }
+
+  Widget _imageTile(String label, File? file, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.all(8),
+        width: 90,
+        height: 90,
+        decoration: BoxDecoration(
+          border: Border.all(),
+          image: file != null
+              ? DecorationImage(image: FileImage(file), fit: BoxFit.cover)
+              : null,
+        ),
+        child: file == null
+            ? Center(child: Text(label, textAlign: TextAlign.center))
+            : null,
+      ),
+    );
   }
 
   Future<SignUpBodyModel?> _prepareSignUpBody(String countryCode) async {
@@ -380,7 +846,8 @@ class SignUpWidgetState extends State<SignUpWidget> {
     String referCode = _referCodeController.text.trim();
 
     String numberWithCountryCode = countryCode + number;
-    PhoneValid phoneValid = await CustomValidator.isPhoneValid(numberWithCountryCode);
+    PhoneValid phoneValid =
+        await CustomValidator.isPhoneValid(numberWithCountryCode);
     numberWithCountryCode = phoneValid.phone;
 
     if (_formKeySignUp!.currentState!.validate()) {
@@ -408,7 +875,33 @@ class SignUpWidgetState extends State<SignUpWidget> {
           email: email,
           phone: numberWithCountryCode,
           password: password,
-          refCode: referCode,
+          code: referCode,
+          landmark: _landmarkController.text.trim(),
+          area: _areaController.text.trim(),
+          taluka: _talukaController.text.trim(),
+          district: _districtController.text.trim(),
+          city: _cityController.text.trim(),
+          state: _stateController.text.trim(),
+          pincode: _pincodeController.text.trim(),
+          route: _routeController.text.trim(),
+          subroute: _subrouteController.text.trim(),
+          latitude: _latitudeController.text.trim(),
+          longitude: _longitudeController.text.trim(),
+          zoneId: _zone_idController.text.trim(),
+
+          // Owner Info
+
+          dob: _dobController.text.trim(),
+          phone1: _phone1Controller.text.trim(),
+          whatsappNo: _whatsapp_noController.text.trim(),
+          whatsappNo1: _whatsapp_no1Controller.text.trim(),
+          panNo: _panCardNoController.text.trim(),
+          gstNo: _gst_noController.text.trim(),
+
+          // Base64 Images (if needed)
+          image: _profileImageFile,
+          panCard: _panImageFile,
+          // udyamCard= _shopImageFile,
         );
         return signUpBody;
       }
