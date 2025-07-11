@@ -14,6 +14,7 @@ import 'package:sixam_mart/features/auth/domain/enum/centralize_login_enum.dart'
 import 'package:sixam_mart/features/auth/domain/models/signup_body_model.dart';
 import 'package:sixam_mart/features/auth/widgets/auth_dialog_widget.dart';
 import 'package:sixam_mart/features/auth/widgets/condition_check_box_widget.dart';
+import 'package:sixam_mart/features/auth/widgets/select_location_view_widget.dart';
 import 'package:sixam_mart/features/cart/controllers/cart_controller.dart';
 import 'package:sixam_mart/features/language/controllers/language_controller.dart';
 import 'package:sixam_mart/features/location/controllers/location_controller.dart';
@@ -46,7 +47,9 @@ class SignUpWidgetState extends State<SignUpWidget> {
   final FocusNode _userNameFocus = FocusNode();
   final FocusNode _referCodeFocus = FocusNode();
   final FocusNode _codeFocus = FocusNode();
+  final FocusNode _userTypeFocus = FocusNode();
   final TextEditingController _codeController = TextEditingController();
+  final TextEditingController _userTypeController = TextEditingController();
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -285,7 +288,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
                       titleText: 'joney'.tr,
-                      labelText: 'User Name'.tr,
+                      labelText: 'user_name1'.tr,
                       showLabelText: true,
                       required: true,
                       controller: _userNameController,
@@ -299,14 +302,32 @@ class SignUpWidgetState extends State<SignUpWidget> {
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
+                      titleText: 'Superstockiest'.tr,
+                      labelText: 'user_type'.tr,
+                      showLabelText: true,
+                      required: true,
+                      controller: _userTypeController,
+                      focusNode: _userTypeFocus,
+                      inputType: TextInputType.name,
+                      capitalization: TextCapitalization.words,
+                      prefixIcon: CupertinoIcons.person_alt_circle_fill,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
+                    ),
+                    SizedBox(
+                        height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+                    CustomTextField(
                       titleText: 'Code'.tr,
-                      labelText: 'Enter Code'.tr,
+                      labelText: 'enter_code'.tr,
                       showLabelText: true,
                       required: true,
                       controller: _codeController,
                       focusNode: _codeFocus,
                       inputType: TextInputType.name,
                       capitalization: TextCapitalization.words,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
+
                       //prefixIcon: CupertinoIcons.person_alt_circle_fill,
                       // validator: (value) => ValidateCheck.validateEmptyText(
                       //     value, "please_enter_your_name".tr),
@@ -314,85 +335,105 @@ class SignUpWidgetState extends State<SignUpWidget> {
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'WhatsApp Number',
-                      labelText: 'WhatsApp Number',
+                      titleText: 'whatsApp_number'.tr,
+                      labelText: 'WhatsApp Number'.tr,
                       controller: _whatsapp_noController,
                       inputType: TextInputType.phone,
                       prefixIcon: Icons.phone_android,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Alternate WhatsApp Number',
-                      labelText: 'WhatsApp Number 2',
+                      titleText: 'alternate_whatsApp_number'.tr,
+                      labelText: 'whatsApp_number_2'.tr,
                       controller: _whatsapp_no1Controller,
                       inputType: TextInputType.phone,
                       prefixIcon: Icons.phone,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Alternate Phone',
-                      labelText: 'Phone 2',
+                      titleText: 'alternate_phone'.tr,
+                      labelText: 'phone_2'.tr,
                       controller: _phone1Controller,
                       inputType: TextInputType.phone,
                       prefixIcon: Icons.phone,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Landmark',
-                      labelText: 'Landmark',
+                      titleText: 'landmark'.tr,
+                      labelText: 'landmark'.tr,
                       controller: _landmarkController,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Area',
-                      labelText: 'Area',
+                      titleText: 'area'.tr,
+                      labelText: 'area'.tr,
                       controller: _areaController,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Taluka',
-                      labelText: 'Taluka',
+                      titleText: 'taluka'.tr,
+                      labelText: 'taluka'.tr,
                       controller: _talukaController,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'District',
-                      labelText: 'District',
+                      titleText: 'district'.tr,
+                      labelText: 'district'.tr,
                       controller: _districtController,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'City',
-                      labelText: 'City',
+                      titleText: 'city'.tr,
+                      labelText: 'city'.tr,
                       controller: _cityController,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'State',
-                      labelText: 'State',
+                      titleText: 'state'.tr,
+                      labelText: 'state'.tr,
                       controller: _stateController,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Pincode',
-                      labelText: 'Pincode',
+                      titleText: 'pincode'.tr,
+                      labelText: 'pincode'.tr,
                       controller: _pincodeController,
                       inputType: TextInputType.number,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Date of Birth',
-                      hintText: 'Select your DOB',
+                      titleText: 'date_of_birth'.tr,
+                      hintText: 'select_your_dob'.tr,
                       controller: _dobController,
                       focusNode: _dobFocusNode,
                       inputType: TextInputType.none, // disables keyboard
@@ -402,7 +443,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
                       showTitle: true,
                       showLabelText: true,
                       required: true,
-                      labelText: 'DOB',
+                      // labelText: 'DOB',
                       onTap: () async {
                         //FocusScope.of(context).unfocus(); // hide keyboard
                         DateTime? pickedDate = await showDatePicker(
@@ -429,104 +470,136 @@ class SignUpWidgetState extends State<SignUpWidget> {
                           _dobController.text = formattedDate;
                         }
                       },
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Opens At',
-                      labelText: 'Opens At',
+                      titleText: 'opens_at'.tr,
+                      labelText: 'opens_at'.tr,
                       controller: _opens_atController,
                       prefixIcon: Icons.access_time,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Closes At',
-                      labelText: 'Closes At',
+                      titleText: 'closes_at'.tr,
+                      labelText: 'closes_at'.tr,
                       controller: _closes_atController,
                       prefixIcon: Icons.access_time_filled,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Address',
-                      labelText: 'Address',
+                      titleText: 'address'.tr,
+                      labelText: 'address'.tr,
                       controller: _addressController,
                       inputType: TextInputType.text,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Latitude',
-                      labelText: 'Latitude',
+                      titleText: 'latitude'.tr,
+                      labelText: 'latitude'.tr,
                       controller: _latitudeController,
                       inputType: TextInputType.number,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
+                    // SelectLocationViewWidget(
+                    //   fromView: true,
+                    //   mapView: true,
+                    //   // mapController: _mapController,
+                    //   addressController: _addressController,
+                    //   // addressFocus: _addressFocus,
+                    //   inDialog: false,
+                    //   latitudeController: _latitudeController,
+                    //   longitudeController: _longitudeController,
+                    // ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Longitude',
-                      labelText: 'Longitude',
+                      titleText: 'longitude'.tr,
+                      labelText: 'longitude'.tr,
                       controller: _longitudeController,
                       inputType: TextInputType.number,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Route',
-                      labelText: 'Route',
+                      titleText: 'route'.tr,
+                      labelText: 'route'.tr,
                       controller: _routeController,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Subroute',
-                      labelText: 'Subroute',
+                      titleText: 'subroute'.tr,
+                      labelText: 'subroute'.tr,
                       controller: _subrouteController,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'Zone ID',
-                      labelText: 'Zone ID',
+                      titleText: 'zone_id'.tr,
+                      labelText: 'zone_id'.tr,
                       controller: _zone_idController,
                       inputType: TextInputType.number,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'GST Number',
-                      labelText: 'GST No.',
+                      titleText: 'gst_number'.tr,
+                      labelText: 'gst_no.'.tr,
                       controller: _gst_noController,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     CustomTextField(
-                      titleText: 'PAN Card Number',
-                      labelText: 'PAN No.',
+                      titleText: 'pan_card_number'.tr,
+                      labelText: 'pan_no.'.tr,
                       controller: _panCardNoController,
+                      validator: (value) => ValidateCheck.validateOtherFields(
+                          value, "please_enter_required_fields".tr),
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
                     const SizedBox(height: 8),
-                    const Text("Upload Documents",
-                        style: TextStyle(
+                    Text("upload_documents".tr,
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18)),
                     const SizedBox(height: 8),
                     Row(
                       children: [
                         _imageTile(
-                            "Profile Image",
+                            "profile_image".tr,
                             _profileImageFile,
                             () => _pickImage(ImageSource.gallery,
                                 (file) => _profileImageFile = file)),
                         _imageTile(
-                            "PAN Card",
+                            "pan_card".tr,
                             _panImageFile,
                             () => _pickImage(ImageSource.gallery,
                                 (file) => _panImageFile = file)),
                         _imageTile(
-                            "Shop Image",
+                            "shop_image".tr,
                             _shopImageFile,
                             () => _pickImage(ImageSource.gallery,
                                 (file) => _shopImageFile = file)),
@@ -883,11 +956,15 @@ class SignUpWidgetState extends State<SignUpWidget> {
           city: _cityController.text.trim(),
           state: _stateController.text.trim(),
           pincode: _pincodeController.text.trim(),
+          opensAt: _opens_atController.text.trim(),
+          closesAt: _closes_atController.text.trim(),
           route: _routeController.text.trim(),
           subroute: _subrouteController.text.trim(),
           latitude: _latitudeController.text.trim(),
           longitude: _longitudeController.text.trim(),
           zoneId: _zone_idController.text.trim(),
+          address: _addressController.text.trim(),
+          username: _userNameController.text.trim(),
 
           // Owner Info
 
@@ -897,11 +974,12 @@ class SignUpWidgetState extends State<SignUpWidget> {
           whatsappNo1: _whatsapp_no1Controller.text.trim(),
           panNo: _panCardNoController.text.trim(),
           gstNo: _gst_noController.text.trim(),
+          usertype: _userTypeController.text.trim(),
 
           // Base64 Images (if needed)
-          image: _profileImageFile,
-          panCard: _panImageFile,
-          // udyamCard= _shopImageFile,
+          // image: _profileImageFile,
+          // panCard: _panImageFile,
+          //udyamCard = _panImageFile,
         );
         return signUpBody;
       }

@@ -26,7 +26,7 @@ class SignUpBodyModel {
   String? zoneId;
   String? gstNo;
   String? panNo;
-  // String? usertype;
+  String? usertype;
   List<int>? category; // assuming categories as list of IDs
   List<int>? subCategory;
 
@@ -63,7 +63,7 @@ class SignUpBodyModel {
     this.zoneId,
     this.gstNo,
     this.panNo,
-    // this.usertype,
+    this.usertype,
     this.category,
     this.subCategory,
     this.image,
@@ -99,7 +99,7 @@ class SignUpBodyModel {
     zoneId = json['zone_id'];
     gstNo = json['gst_no'];
     panNo = json['pan_no'];
-    //usertype = json['usertype'];
+    usertype = json['usertype'];
     category =
         json['category'] != null ? List<int>.from(json['category']) : null;
     subCategory = json['sub_category'] != null
@@ -139,7 +139,7 @@ class SignUpBodyModel {
     data['zone_id'] = zoneId ?? '';
     data['gst_no'] = gstNo ?? '';
     data['pan_no'] = panNo ?? '';
-    //  data['usertype'] = usertype ?? '';
+    data['usertype'] = usertype ?? '';
 
     // Flatten array fields
     if (category != null) {
@@ -156,6 +156,53 @@ class SignUpBodyModel {
 
     return data;
   }
+
+  // Map<String, String> toJson() {
+  //   final Map<String, String> data = <String, String>{};
+  //   data['name'] = "John Doe" ?? '';
+  //   data['email'] = "johnhb@example.com" ?? '';
+  //   data['phone'] = "9876543rtxc210" ?? '';
+  //   data['password'] = "Abcd@1234" ?? '';
+  //   data['code'] = "JD001" ?? '';
+  //   data['username'] = "johnny" ?? '';
+  //   data['whatsapp_no'] = "9876543210" ?? '';
+  //   data['whatsapp_no1'] = "9876543211" ?? '';
+  //   data['phone1'] = "9876543212" ?? '';
+  //   data['landmark'] = "Near Main Road" ?? '';
+  //   data['area'] = "Downtown" ?? '';
+  //   data['taluka'] = "TalukaX" ?? '';
+  //   data['district'] = "DistrictY" ?? '';
+  //   data['city'] = "Mumbai" ?? '';
+  //   data['state'] = "Maharashtra" ?? '';
+  //   data['pincode'] = "400001" ?? '';
+  //   data['dob'] = "1990-01-01" ?? '';
+  //   data['opens_at'] = "09:00" ?? '';
+  //   data['closes_at'] = "21:00" ?? '';
+  //   data['address'] = "123 Main Street" ?? '';
+  //   data['latitude'] = "19.0760" ?? '';
+  //   data['longitude'] = "72.8777" ?? '';
+  //   data['route'] = "Route A" ?? '';
+  //   data['subroute'] = "Subroute 1" ?? '';
+  //   data['zone_id'] = "2" ?? '';
+  //   data['gst_no'] = "27ABCDE1234F1Z5" ?? '';
+  //   data['pan_no'] = "ABCDE1234F" ?? '';
+  //   data['usertype'] = "Superstockiest" ?? '';
+
+  //   // Flatten array fields
+  //   if (category != null) {
+  //     for (var cat in category!) {
+  //       data['category[]'] = cat.toString();
+  //     }
+  //   }
+
+  //   if (subCategory != null) {
+  //     for (var sub in subCategory!) {
+  //       data['sub_category[]'] = sub.toString();
+  //     }
+  //   }
+
+  //   return data;
+  // }
 }
 // class SignUpBodyModel {
 //   // Existing fields
