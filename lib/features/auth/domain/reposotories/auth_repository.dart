@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -64,6 +65,7 @@ class AuthRepository implements AuthRepositoryInterface {
       required String loginType,
       required String fieldType,
       bool alreadyInApp = false}) async {
+    log('Siddhesh Message');
     String guestId = getSharedPrefGuestId();
     Map<String, String> data = {
       "email_or_phone": emailOrPhone,
@@ -78,15 +80,19 @@ class AuthRepository implements AuthRepositoryInterface {
 
     Response response = await apiClient.postData(AppConstants.loginUri, data,
         handleError: false);
+    print("Siddhesh Response$response");
 
     if (response.statusCode == 200 && response.body != null) {
       Map<String, dynamic> responseData = response.body;
+      print("Siddhesh ResponseData$responseData");
 
       if (responseData.containsKey("usertype")) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString("usertype", responseData["usertype"].toString());
       }
     }
+    print("Siddhesh ResponseData$response");
+
     return response;
   }
 
@@ -240,8 +246,8 @@ class AuthRepository implements AuthRepositoryInterface {
       }
       if (!GetPlatform.isWeb) {
         FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
-        FirebaseMessaging.instance.subscribeToTopic(
-            'zone_${AddressHelper.getUserAddressFromSharedPref()!.zoneId}_customer');
+        // FirebaseMessaging.instance.subscribeToTopic(
+        //     'zone_${AddressHelper.getUserAddressFromSharedPref()!.zoneId}_customer');
       }
     }
     return await apiClient.postData(

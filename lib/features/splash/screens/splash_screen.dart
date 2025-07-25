@@ -42,8 +42,9 @@ class SplashScreenState extends State<SplashScreen> {
 
   void _navigateToHome() {
     bool firstTime = true;
-    _onConnectivityChanged = Connectivity().onConnectivityChanged.listen((
-        List<ConnectivityResult> result) {
+    _onConnectivityChanged = Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> result) {
       bool isConnected = result.contains(ConnectivityResult.wifi) ||
           result.contains(ConnectivityResult.mobile);
 
@@ -65,11 +66,8 @@ class SplashScreenState extends State<SplashScreen> {
     });
 
     Get.find<SplashController>().initSharedData();
-    if ((AuthHelper
-        .getGuestId()
-        .isNotEmpty || AuthHelper.isLoggedIn()) && Get
-        .find<SplashController>()
-        .cacheModule != null) {
+    if ((AuthHelper.isLoggedIn()) &&
+        Get.find<SplashController>().cacheModule != null) {
       Get.find<CartController>().getCartDataOnline();
     }
     _route();
@@ -85,13 +83,14 @@ class SplashScreenState extends State<SplashScreen> {
     Get.find<SplashController>().getConfigData().then((_) {
       Timer(const Duration(seconds: 1), () async {
         double? minimumVersion = _getMinimumVersion();
-        bool isMaintenanceMode = Get.find<SplashController>().configModel!.maintenanceMode!;
+        bool isMaintenanceMode =
+            Get.find<SplashController>().configModel!.maintenanceMode!;
         bool needsUpdate = AppConstants.appVersion < minimumVersion!;
 
-        if(needsUpdate || isMaintenanceMode) {
+        if (needsUpdate || isMaintenanceMode) {
           Get.offNamed(RouteHelper.getUpdateRoute(needsUpdate));
         } else {
-          if(widget.body != null) {
+          if (widget.body != null) {
             _forNotificationRouteProcess(widget.body);
           } else {
             _handleUserRouting();
@@ -103,15 +102,9 @@ class SplashScreenState extends State<SplashScreen> {
 
   double? _getMinimumVersion() {
     if (GetPlatform.isAndroid) {
-      return Get
-          .find<SplashController>()
-          .configModel!
-          .appMinimumVersionAndroid;
+      return Get.find<SplashController>().configModel!.appMinimumVersionAndroid;
     } else if (GetPlatform.isIOS) {
-      return Get
-          .find<SplashController>()
-          .configModel!
-          .appMinimumVersionIos;
+      return Get.find<SplashController>().configModel!.appMinimumVersionIos;
     }
     return 0;
   }
@@ -120,17 +113,17 @@ class SplashScreenState extends State<SplashScreen> {
     final notificationType = notificationBody?.notificationType;
 
     final Map<NotificationType, Function> notificationActions = {
-      NotificationType.order: () =>
-          Get.toNamed(RouteHelper.getOrderDetailsRoute(
-              widget.body!.orderId, fromNotification: true)),
+      NotificationType.order: () => Get.toNamed(
+          RouteHelper.getOrderDetailsRoute(widget.body!.orderId,
+              fromNotification: true)),
       NotificationType.block: () =>
           Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.notification)),
       NotificationType.unblock: () =>
           Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.notification)),
-      NotificationType.message: () =>
-          Get.toNamed(RouteHelper.getChatRoute(notificationBody: widget.body,
-              conversationID: widget.body!.conversationId,
-              fromNotification: true)),
+      NotificationType.message: () => Get.toNamed(RouteHelper.getChatRoute(
+          notificationBody: widget.body,
+          conversationID: widget.body!.conversationId,
+          fromNotification: true)),
       NotificationType.otp: () => null,
       NotificationType.add_fund: () =>
           Get.toNamed(RouteHelper.getWalletRoute(fromNotification: true)),
@@ -147,15 +140,13 @@ class SplashScreenState extends State<SplashScreen> {
   Future<void> _forLoggedInUserRouteProcess() async {
     Get.find<AuthController>().updateToken();
     if (AddressHelper.getUserAddressFromSharedPref() != null) {
-      if (Get
-          .find<SplashController>()
-          .module != null) {
+      if (Get.find<SplashController>().module != null) {
         await Get.find<FavouriteController>().getFavouriteList();
       }
       Get.offNamed(RouteHelper.getInitialRoute(fromSplash: true));
     } else {
-      Get.find<LocationController>().navigateToLocationScreen(
-          'splash', offNamed: true);
+      Get.find<LocationController>()
+          .navigateToLocationScreen('splash', offNamed: true);
     }
   }
 
@@ -169,8 +160,8 @@ class SplashScreenState extends State<SplashScreen> {
 
   void _newlyRegisteredRouteProcess() {
     int staticIndex = 0;
-    LocalizationController localizationController = Get.find<
-        LocalizationController>();
+    LocalizationController localizationController =
+        Get.find<LocalizationController>();
     if (localizationController.languages.isNotEmpty) {
       localizationController.setLanguage(Locale(
         AppConstants.languages[staticIndex].languageCode!,
@@ -201,7 +192,8 @@ class SplashScreenState extends State<SplashScreen> {
             Image.asset(Images.logo, width: 200),
             const SizedBox(height: Dimensions.paddingSizeSmall),
           ]),
-        ),  ),
+        ),
+      ),
     );
   }
 }

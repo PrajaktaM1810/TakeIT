@@ -14,7 +14,6 @@ import 'package:sixam_mart/features/auth/domain/enum/centralize_login_enum.dart'
 import 'package:sixam_mart/features/auth/domain/models/signup_body_model.dart';
 import 'package:sixam_mart/features/auth/widgets/auth_dialog_widget.dart';
 import 'package:sixam_mart/features/auth/widgets/condition_check_box_widget.dart';
-import 'package:sixam_mart/features/auth/widgets/select_location_view_widget.dart';
 import 'package:sixam_mart/features/cart/controllers/cart_controller.dart';
 import 'package:sixam_mart/features/language/controllers/language_controller.dart';
 import 'package:sixam_mart/features/location/controllers/location_controller.dart';
@@ -28,6 +27,8 @@ import 'package:sixam_mart/helper/validate_check.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/util/images.dart';
 import 'package:sixam_mart/util/styles.dart';
+
+import '../../../common/widgets/custom_dropdown.dart';
 
 class SignUpWidget extends StatefulWidget {
   const SignUpWidget({super.key});
@@ -82,6 +83,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
   final TextEditingController _zone_idController = TextEditingController();
   final TextEditingController _gst_noController = TextEditingController();
   final TextEditingController _panCardNoController = TextEditingController();
+  String? _selectedUserType;
 
 //   // Image files
   File? _profileImageFile;
@@ -110,6 +112,13 @@ class SignUpWidgetState extends State<SignUpWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> userTypes = [
+      'Superstockiest',
+      'Distributor',
+      'Dealer',
+      'Retailer',
+      'Single User',
+    ];
     bool isDesktop = ResponsiveHelper.isDesktop(context);
     return Form(
       key: _formKeySignUp,
@@ -301,21 +310,138 @@ class SignUpWidgetState extends State<SignUpWidget> {
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
-                    CustomTextField(
-                      titleText: 'Superstockiest'.tr,
-                      labelText: 'user_type'.tr,
-                      showLabelText: true,
-                      required: true,
-                      controller: _userTypeController,
-                      focusNode: _userTypeFocus,
-                      inputType: TextInputType.name,
-                      capitalization: TextCapitalization.words,
-                      prefixIcon: CupertinoIcons.person_alt_circle_fill,
-                      validator: (value) => ValidateCheck.validateOtherFields(
-                          value, "please_enter_required_fields".tr),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'user_type'.tr,
+                          style:
+                              Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                        ),
+                        const SizedBox(height: 8),
+                        DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Theme.of(context)
+                                .cardColor, // Gray or theme-based background
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .disabledColor, // subtle gray border
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .primaryColor, // color when focused
+                                width: 1.5,
+                              ),
+                            ),
+                            prefixIcon: const Icon(
+                              CupertinoIcons.person_alt_circle_fill,
+                              color: Colors.grey, // Icon color
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 16),
+                          ),
+                          dropdownColor: Theme.of(context)
+                              .cardColor, // Matches gray background
+                          value: _selectedUserType,
+                          icon: const Icon(Icons.keyboard_arrow_down_rounded,
+                              color: Colors.grey),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.color,
+                                  ),
+                          items: userTypes.map((type) {
+                            return DropdownMenuItem(
+                              value: type,
+                              child: Text(type),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedUserType = value;
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'please_enter_required_fields'.tr;
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
                     ),
                     SizedBox(
                         height: !isDesktop ? Dimensions.paddingSizeLarge : 0),
+
+                    // CustomDropdown<String>(
+                    //   child: Text(
+                    //     _selectedUserType ?? 'Select user type',
+                    //     style: robotoRegular.copyWith(
+                    //       fontSize: Dimensions.fontSizeDefault,
+                    //       color: _selectedUserType == null
+                    //           ? Theme.of(context).hintColor
+                    //           : Colors.black,
+                    //     ),
+                    //   ),
+                    //   items: userTypes
+                    //       .map((type) => DropdownItem<String>(
+                    //             value: type,
+                    //             child: Padding(
+                    //               padding: const EdgeInsets.all(12.0),
+                    //               child: Text(type, style: robotoRegular),
+                    //             ),
+                    //           ))
+                    //       .toList(),
+                    //   dropdownButtonStyle: DropdownButtonStyle(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     height: 50,
+                    //     padding: const EdgeInsets.symmetric(horizontal: 12),
+                    //     backgroundColor: Theme.of(context).cardColor,
+                    //     elevation: 1,
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(10),
+                    //     ),
+                    //   ),
+                    //   dropdownStyle: DropdownStyle(
+                    //     borderRadius: BorderRadius.circular(10),
+                    //     elevation: 2,
+                    //     padding: const EdgeInsets.symmetric(vertical: 6),
+                    //     color: Theme.of(context).cardColor,
+                    //   ),
+                    //   icon: const Icon(Icons.expand_more),
+                    //   leadingIcon: false,
+                    //   onChange: (value, index) {
+                    //     setState(() {
+                    //       _selectedUserType = value;
+                    //     });
+                    //     Navigator.of(context).maybePop();
+                    //     FocusScope.of(context).unfocus();
+                    //   },
+                    // ),
+                    // const SizedBox(height: 6),
+                    // // if (_selectedUserType == null)
+                    // //   Padding(
+                    // //     padding: const EdgeInsets.only(left: 4.0),
+                    // //     child: Text(
+                    // //       'please_enter_required_fields'.tr,
+                    // //       style: TextStyle(
+                    // //           color: Theme.of(context).colorScheme.error),
+                    // //     ),
+                    // //   ),
+
                     CustomTextField(
                       titleText: 'Code'.tr,
                       labelText: 'enter_code'.tr,
